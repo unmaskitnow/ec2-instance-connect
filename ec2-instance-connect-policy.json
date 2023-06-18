@@ -1,0 +1,49 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AdditionalPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeInstances",
+                "ec2:DescribeInstanceConnectEndpoints",
+                "ec2-instance-connect:SendSSHPublicKey"                                                                                                          //Only required for access via AWS Console
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "ForLinux",
+            "Effect": "Allow",
+            "Action": "ec2-instance-connect:OpenTunnel",
+            "Resource": "arn:aws:ec2:<AWS_REGION>:<AWS_ACCOUNT_ID>:instance-connect-endpoint/<EC2_CONNECT_ENDPOINT_ID>",                                          //Add endpoint ARN
+            "Condition": {
+                "NumericEquals": {
+                    "ec2-instance-connect:remotePort": "22"
+                },
+                "IpAddress": {
+                    "ec2-instance-connect:privateIpAddress": "<LINUX_INSTANCE_PRIVATE_IP>"                                                                        //Add Linux instance private IP
+                },
+                "NumericLessThanEquals": {
+                    "ec2-instance-connect:maxTunnelDuration": "<MAX_TUNNEL_DURATION_VALUE>"                                                                       //Add max tunnel duration
+                }
+            }
+        },
+        {
+            "Sid": "ForWindows",
+            "Effect": "Allow",
+            "Action": "ec2-instance-connect:OpenTunnel",
+            "Resource": "arn:aws:ec2:<AWS_REGION>:<AWS_ACCOUNT_ID>:instance-connect-endpoint/<EC2_CONNECT_ENDPOINT_ID>",                                          //Add endpoint ARN
+            "Condition": {
+                "NumericEquals": {
+                    "ec2-instance-connect:remotePort": "3389"
+                },
+                "IpAddress": {
+                    "ec2-instance-connect:privateIpAddress": "<WINDOWS_INSTANCE_PRIVATE_IP>"                                                                       //Add Windows instance private IP
+                },
+                "NumericLessThanEquals": {
+                    "ec2-instance-connect:maxTunnelDuration": "<MAX_TUNNEL_DURATION_VALUE>"                                                                        //Add max tunnel duration
+                }
+            }
+        }
+    ]
+}

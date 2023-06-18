@@ -1,0 +1,20 @@
+#List AWS CLI version
+aws --version
+
+#Verify the current AWS CLI user
+aws sts get-caller-identity
+
+#Command to assume an IAM role
+aws sts assume-role --role-arn arn:aws:iam::<AWS_ACCOUNT_ID>:role/<IAM_ROLE_NAME> --role-session-name <ROLE_SESSION_NAME>
+
+#Export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN as environment variables
+export AWS_ACCESS_KEY_ID=<Value of the AccessKeyID>
+export AWS_SECRET_ACCESS_KEY=<Value of the SecretAccessKey>
+export AWS_SESSION_TOKEN=<Value SessionToken>
+
+#Connect to EC2 Windows instance using EC2 Instance Connect endpoint
+aws ec2-instance-connect open-tunnel --instance-id <INSTANCE_ID> --remote-port 3389 --local-port <EPHEMERAL PORT> --max-tunnel-duration <MAX_TUNNEL_DURATION_VALUE>
+
+#Connect to EC2 Linux instance using EC2 Instance Connect endpoint
+ssh -i <PATH_TO_EC2_KEY_PAIR> ec2-user@<INSTANCE_PRIVATE_IP> \
+    -o ProxyCommand='aws ec2-instance-connect open-tunnel --instance-id <INSTANCE_ID> --max-tunnel-duration <MAX_TUNNEL_DURATION_VALUE>'
